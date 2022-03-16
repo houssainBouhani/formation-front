@@ -1,0 +1,8 @@
+.remove-border .nav-link{
+    border-left: none!important;
+    border-right: none!important;
+}
+
+.remove-border .nav-item{
+ margin-right: 0!important;
+}

@@ -1,0 +1,28 @@
+.logo-size {
+    max-width: 200px;
+}
+
+
+.naza-bg {
+    background: #9D7DD7;
+}
+
+
+
+.image-gallery {
+    width: 100%;
+    height: auto;
+}
+
+.image-gallery-slide img {
+    width: 100%!important;
+    height: auto;
+    padding: 50px!important;
+    object-fit: cover;
+    overflow: hidden;
+    object-position: center center;
+}
+
+.fullscreen .image-gallery-slide img {
+    min-height: 100vh!important;
+}

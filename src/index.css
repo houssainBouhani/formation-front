@@ -1,0 +1,9 @@
+
+
+/*Import main css file*/
+@import url("./styles/main.css");
+
+/* import custom css */
+@import url("./styles/global.css");
+
+

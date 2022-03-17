@@ -1,8 +1,8 @@
 import moment from "moment";
 import React, { useEffect, useState } from "react";
+import { Modal, Button , Spinner} from "react-bootstrap";
 
-//modal
-import Modals from "../../../components/modal/Modals";
+
 
 import { v4 as uuid } from "uuid";
 import api from '../../../axiosConfig'
@@ -11,24 +11,55 @@ import api from '../../../axiosConfig'
 const Users = (props) => {
 
   const [users, setusers] = useState();
+  const [modalShow1, setModalShow1] = useState(false);
+  const [modalShow2, setModalShow2] = useState(false);
 
-useEffect(() => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+
+    setusers(props.users)
+
+  }, [props.users, users,modalShow1,modalShow2])
+
+
+
+  const onConfirmStudent = (id) => {
+    setUser(id);
+    setModalShow1(true);
   
-setusers(props.users)
 
-}, [props.users])
-
-  const onDeleteStudent = async (id) => {
-    console.log(id)
-    await api.delete(`/users/${id}`)
   };
 
-  const onConfirmStudent = async (id) => {
-    console.log(id)
-    await api.put(`/users/updateEtat/${id}`,{etat:"ACCEPTED"})
 
-   
+  const confirmStudent = async () => {
+    const { data } = await api.post(`/users/updateEtat/`, { id: user, etat: "accepted" });
+
+    if (data.etat === "accepted") {
+      setModalShow1(false);
+      window.location.reload()
+    }
+
+  }
+
+
+  const onDeleteStudent = (id) => {
+    setUser(id);
+    setModalShow2(true);
+
+
   };
+
+  const deleteStudent = async () => {
+    const { data } = await api.delete(`/users/${user}`);
+    if (data.message === 'User deleted successfully') {
+      setModalShow2(false);
+      window.location.reload()
+    }
+
+  }
+
+
 
   return (
     <div className="mb-5  card">
@@ -60,8 +91,6 @@ setusers(props.users)
               </tr>
             </thead>
             <tbody role="rowgroup">
-              {console.log(props.users)}
-
               {props.users.length > 0 &&
                 props.users.map((user) => (
                   <tr role="row" key={uuid()}>
@@ -80,80 +109,95 @@ setusers(props.users)
                     </td>
                     <td role="cell">
                       <div className="d-flex justify-content-center border-top-0">
-                        <a
+                        <button
                           role="button"
                           className="btn-sm btn btn-success me-2"
                           onClick={() => onConfirmStudent(user.id)}
                         >
                           Accepter
-                        </a>
-                        <a
+                        </button>
+                        <button
                           role="button"
                           className="btn-outline-white btn-sm btn btn-outline"
                           onClick={() => onDeleteStudent(user.id)}
                         >
                           Rejeter
-                        </a>
+                        </button>
                       </div>
                     </td>
                   </tr>
-                ))}
+                )) 
+                
+               
+                }
             </tbody>
           </table>
         </div>
 
-{
-  /*
-  
-   <div className="row">
-          <div className="col-lg-12 col-md-12 col-sm-12">
-            <div className="pb-5">
-              <nav>
-                <ul className="justify-content-center mb-0 pagination">
-                  <li className="page-item">
-                    <button
-                      type="button"
-                      className="page-link mx-1 rounded btn btn-primary"
-                    >
-                      <i className="fe fe-chevron-left" />
-                    </button>
-                  </li>
-                  <li className="page-item active page-item">
-                    <button
-                      type="button"
-                      className="page-link mx-1 rounded btn btn-primary"
-                    >
-                      1
-                    </button>
-                  </li>
-                  <li className="page-item  page-item">
-                    <button
-                      type="button"
-                      className="page-link mx-1 rounded btn btn-primary"
-                    >
-                      2
-                    </button>
-                  </li>
-                  <li className="page-item">
-                    <button
-                      type="button"
-                      className="page-link mx-1 rounded btn btn-primary"
-                    >
-                      <i className="fe fe-chevron-right" />
-                    </button>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
+        <div>
+          <Modal
+            show={modalShow1}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+          >
+            <Modal.Body>
+              <h4>voulez-vous vraiment confirmer l'utilisateur </h4>
+
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                type="button"
+                onClick={() => confirmStudent()}
+                className=" btn btn-primary"
+              >
+                confirmer
+              </Button>
+              <Button
+                type="button"
+                onClick={() => setModalShow1(false)}
+                className=" btn btn-secondary"
+              >
+                annuler
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          <Modal
+            show={modalShow2}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+          >
+            <Modal.Body>
+              <h4>voulez-vous vraiment supprimer l'utilisateur </h4>
+
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                type="button"
+                onClick={() => deleteStudent()}
+                className=" btn btn-primary"
+              >
+                confirmer
+              </Button>
+              <Button
+                type="button"
+                onClick={() => setModalShow2(false)}
+                className=" btn btn-secondary"
+              >
+                annuler
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </div>
-  */ 
-}
-       
       </div>
-    
+
     </div>
   );
 };
 
 export default Users;
+
+
+

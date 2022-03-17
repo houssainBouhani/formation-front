@@ -67,7 +67,7 @@ const FormRegister = () => {
     //get userdata
     const userData = {
       Name: values.userName,
-      etat: "accepted",
+      etat: "encours",
       email: values.email,
       password: values.password,
       role: "USER",
@@ -79,19 +79,20 @@ const FormRegister = () => {
   };
 
 
-  const checkRegistration =  () => {
+  const checkRegistration = () => {
     if (isRegistred) {
-       setTimeout(() => {
+      setTimeout(() => {
         navigate(`/`);
       }, 3000);
     }
-  
+
 
   }
 
-  
+
 
   const showError = () => {
+    console.log(error)
     if (error !== null) {
       toast.current.show({ severity: 'error', summary: `l'inscription a échoué`, detail: `un compte déjà utilisé avec cet e-mail` });
     }

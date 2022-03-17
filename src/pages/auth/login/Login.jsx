@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 
 //react router link
 import { Link } from 'react-router-dom'
@@ -35,48 +35,50 @@ const Login = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const toast = useRef(null);
-
-  
   const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
   const error = useSelector((state) => state.authReducer.error);
   const loading = useSelector((state) => state.authReducer.loading);
+  const user = useSelector((state) => state.authReducer.user);
 
-  
+
   useEffect(() => {
 
-    
-    if (isAuthenticated) {
-      navigate(`/`);
+    if (isAuthenticated && user !== null) {
+      if (user.role === "ADMIN") {
+        navigate(`/admin/dashboard`);
+      } else {
+        navigate(`/`);
+      }
     }
 
-  
-  }, [isAuthenticated,error]);
+
+  }, [isAuthenticated, error, user]);
 
 
 
-  const onLogin  = (e,values) => {
+  const onLogin = (e, values) => {
     e.preventDefault();
-  //get userdata
-  const userData = {
-    email: values.email,
-    password: values.password
-  };
-  dispatch(login(userData));
+    //get userdata
+    const userData = {
+      email: values.email,
+      password: values.password
+    };
+    dispatch(login(userData));
 
-  
 
- }
 
- 
- const showError = () => {
-  if (error !== null) {
-    toast.current.show({ severity: 'error', summary: `l'inscription a échoué`, detail: `l'email/le mot de passe est incorrect` });
-    dispatch({type:CLEAR_ERRORS})
   }
 
-}
+
+  const showError = () => {
+
+    if (error !== null) {
+      toast.current.show({ severity: 'error', summary: `l'inscription a échoué`, detail: `l'email/le mot de passe est incorrect` });
+      dispatch({ type: CLEAR_ERRORS })
+    }
+
+  }
 
   return (
     <Formik
@@ -85,19 +87,19 @@ const Login = () => {
         password: "",
       }}
       validationSchema={schema}
-      onSubmit={(values,e) => {
+      onSubmit={(values, e) => {
         console.log(values);
       }}
     >
       {({
-         values,
-         isValid,
-         dirty
+        values,
+        isValid,
+        dirty
       }) => (
         <div id="db-wrapper">
 
-{showError()}
-<Toast ref={toast} />
+          {showError()}
+          <Toast ref={toast} />
           <div className="d-flex flex-column container mt-5">
             <div className="align-items-center justify-content-center g-0 min-vh-100 row">
               <div className="py-8 py-xl-0 col-lg-5 col-md-5">
@@ -111,9 +113,9 @@ const Login = () => {
                       />
                       <h1 className="mb-1 fw-bold">S'identifier</h1>
                       <span>
-                      Vous n'avez pas de compte ? 
+                        Vous n'avez pas de compte ?
                         <Link className="ms-1" to={"/auth/register"}>
-                        S'inscrire
+                          S'inscrire
                         </Link>
                       </span>
                     </div>

@@ -6,8 +6,11 @@ import { Link } from "react-router-dom";
 
 //carousel
 import Slider from "react-slick";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const CoursesSlider = (props) => {
+  const isLoggedIn = useSelector((state) => state.authReducer.isAuthenticated);
 
   const settings = {
     dots: true,
@@ -28,20 +31,33 @@ const CoursesSlider = (props) => {
           style={{ width: "100%", display: "inline-block" }}
         >
           <div className="mb-4 card-hover mx-2 card">
-            <Link to={"courses/1"}>
-              <img
+
+
+            {
+              !isLoggedIn ? <img
                 src={require("../../../../assets/images/1.png")}
                 alt=""
                 className="card-img-top rounded-top-md"
-             
-              />
-            </Link>
+
+              /> : (<Link to={"courses/1"}>
+                <img
+                  src={require("../../../../assets/images/1.png")}
+                  alt=""
+                  className="card-img-top rounded-top-md"
+
+                />
+              </Link>)
+            }
             <div className="card-body">
               <h3 className="h4 mb-2 text-truncate-line-2 ">
-                <Link className="text-inherit" to={"courses/1"}>
-                  
-              {  props.course.nom &&    props.course.nom }
-                </Link>
+
+                {
+                  !isLoggedIn ? props.course.nom && props.course.nom :
+                    <Link className="text-inherit" to={"courses/1"}>
+
+                      {props.course.nom && props.course.nom}
+                    </Link>
+                }
               </h3>
               <ul className="mb-3 list-inline">
                 <li className="list-inline-item">
@@ -85,7 +101,7 @@ const CoursesSlider = (props) => {
                   Advance
                 </li>
               </ul>
-           
+
             </div>
             <div className="card-footer">
               <div className="align-items-center g-0 row">

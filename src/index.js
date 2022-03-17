@@ -31,7 +31,9 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import Terms from "./pages/terms/Terms";
 import Politics from "./pages/politics/Politics";
 
- 
+
+
+
 
 ReactDOM.render(
   <React.StrictMode>
